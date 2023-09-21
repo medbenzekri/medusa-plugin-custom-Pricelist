@@ -1,6 +1,6 @@
 {
-  "name": "medusa-starter-default",
-  "version": "0.0.1",
+  "name": "medusa-plugin-custom-pricelist",
+  "version": "1.0.0",
   "description": "A starter for Medusa projects.",
   "author": "Sebastian Rindom <skrindom@gmail.com>",
   "license": "MIT",
@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "clean": "cross-env ./node_modules/.bin/rimraf dist",
-    "build": "cross-env npm run clean && npm run build:server && npm run build:admin",
+    "build": "cross-env npm run clean && npm run build:server",
     "build:server": "cross-env npm run clean && tsc -p tsconfig.json",
     "build:admin": "cross-env medusa-admin build",
     "watch": "cross-env tsc --watch",
@@ -22,10 +22,9 @@
     "prepare": "cross-env NODE_ENV=production npm run build:server && medusa-admin bundle"
   },
   "dependencies": {
+    "@medusajs/medusa": "1.16.1",
     "@medusajs/admin": "^7.0.1",
-    "@medusajs/event-bus-local": "^1.9.6",
     "@medusajs/icons": "^1.0.0",
-    "@medusajs/medusa": "^1.15.0",
     "@medusajs/ui": "^1.0.0",
     "@tanstack/react-query": "4.22.0",
     "babel-preset-medusa-package": "^1.1.13",
@@ -35,9 +34,14 @@
     "express": "^4.17.2",
     "medusa-interfaces": "^1.3.7",
     "prism-react-renderer": "^2.0.4",
-    "typeorm": "^0.3.16"
+    "typeorm": "^0.3.16",
+    "@radix-ui/react-accordion": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.1.3",
+    "react": "^18.2.0",
+    "react-select": "^5.7.4"
   },
   "devDependencies": {
+    "@medusajs/admin": "^7.0.1",
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
     "@babel/preset-typescript": "^7.21.4",
@@ -56,7 +60,9 @@
     "typescript": "^4.5.2"
   },
   "peerDependencies": {
-    "@medusajs/medusa": "^1.15.0"
+    "@medusajs/medusa": "^1.15.0",
+    "react": "^18.2.0",
+    "react-router-dom": "^6.13.0"
   },
   "jest": {
     "globals": {
