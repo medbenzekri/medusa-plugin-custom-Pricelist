@@ -6,7 +6,7 @@ import {
   Heading,
   Input,
   Label,
-  RadioGroup
+  RadioGroup,
 } from "@medusajs/ui";
 import {
   useAdminCollections,
@@ -14,10 +14,12 @@ import {
   useAdminProductTypes,
   useAdminProducts,
   useAdminUpdatePriceList,
-  useProductTags
+  useProductTags,
 } from "medusa-react";
 import { useMemo, useState } from "react";
 import ReactSelect from "react-select";
+import DiscountType from "./components/DiscountType";
+import DiscountInput from "./components/DiscountInput";
 
 const DISCOUNT_TYPES = {
   FIXED: "FIXED",
@@ -26,7 +28,8 @@ const DISCOUNT_TYPES = {
 
 const CustomPrices = ({ notify, priceList }) => {
   const [open, setOpen] = useState(false);
-  const [type, setType] = useState(DISCOUNT_TYPES.FIXED);
+  const typeState = useState(DISCOUNT_TYPES.PERCENTAGE);
+  const [discountValue, setDV] = useState(0);
   // get categories list
   const { product_categories = [] } = useAdminProductCategories();
   const { mutate } = useAdminUpdatePriceList(priceList.id);
@@ -41,7 +44,6 @@ const CustomPrices = ({ notify, priceList }) => {
   const [selectedTags, setSelectedTags] = useState<any>([]);
   const [selectedCollections, setSelectedCollections] = useState<any>([]);
   const [selectedProductTypes, setSelectedProductTypes] = useState<any>([]);
-  const [discountValue, setDV] = useState(null);
 
   const categories = product_categories?.map((c) => ({
     value: c.id,
@@ -80,9 +82,17 @@ const CustomPrices = ({ notify, priceList }) => {
     selectedProductTypes,
   ]);
 
+  const isDisabled =
+    (typeState[0] === DISCOUNT_TYPES.PERCENTAGE && discountValue > 100) ||
+    productsSelected?.length === 0 ||
+    discountValue === 0;
+
   function applyPricing() {
-    if (type === DISCOUNT_TYPES.PERCENTAGE && discountValue > 100) {
-      notify.error("error", "Discount percentage cannot be more than 100");
+    if (typeState[0] === DISCOUNT_TYPES.PERCENTAGE && discountValue > 100) {
+      return notify.error(
+        "error",
+        "Discount percentage cannot be more than 100"
+      );
     }
     const preparePrices = {
       prices: productsSelected
@@ -94,8 +104,8 @@ const CustomPrices = ({ notify, priceList }) => {
                 variant_id: price.variant_id,
                 amount: Math.max(
                   Math.round(
-                    type === DISCOUNT_TYPES.FIXED
-                      ? price.amount - discountValue
+                    typeState[0] === DISCOUNT_TYPES.FIXED
+                      ? price.amount - discountValue * 100
                       : price.amount * ((100 - discountValue) / 100)
                   ),
                   0
@@ -107,7 +117,7 @@ const CustomPrices = ({ notify, priceList }) => {
         )
         .flat(),
     };
-
+    console.log(preparePrices);
     mutate(preparePrices, {
       onSuccess: () => {
         notify.success("success", "Prices updated");
@@ -133,47 +143,27 @@ const CustomPrices = ({ notify, priceList }) => {
           Show dymanic selection form
         </Button>
         <FocusModal.Content>
-          <FocusModal.Body className="flex flex-col items-center py-16 gap-10">
+          <FocusModal.Header>
+            <Button
+              variant="primary"
+              size="large"
+              className="w-40"
+              disabled={isDisabled}
+              onClick={applyPricing}
+            >
+              Apply pricing
+            </Button>
+          </FocusModal.Header>
+          <FocusModal.Body className="flex flex-col items-center py-16 gap-10 overflow-scroll">
             <div className="flex w-full max-w-lg flex-col gap-y-8">
-              <div className="flex flex-col gap-y-1">
+              <div className="flex flex-col gap-4">
                 <Heading>Edit Prices list by group</Heading>
-                <RadioGroup defaultValue={type} onValueChange={setType}>
-                  <div className="flex items-start gap-x-3">
-                    <RadioGroup.Item
-                      value={DISCOUNT_TYPES.FIXED}
-                      id="radio_1_descriptions"
-                    />
-                    <div className="flex flex-col gap-y-0.5">
-                      <Label htmlFor="radio_1_descriptions" weight="plus">
-                        Fixed amount
-                      </Label>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-x-3">
-                    <RadioGroup.Item
-                      value={DISCOUNT_TYPES.PERCENTAGE}
-                      id="radio_2_descriptions"
-                    />
-                    <div className="flex flex-col gap-y-0.5">
-                      <Label htmlFor="radio_2_descriptions" weight="plus">
-                        Percentage
-                      </Label>
-                    </div>
-                  </div>
-                </RadioGroup>
-                <div>
-                  <Label htmlFor="dv-input" weight="plus">
-                    Value
-                  </Label>
-                  <Input
-                    type="number"
-                    min={0}
-                    max={type === DISCOUNT_TYPES.PERCENTAGE ? 100 : Infinity}
-                    id="dv-input"
-                    value={discountValue}
-                    onChange={(e) => setDV(e.target.value)}
-                  />
-                </div>
+                <DiscountType typeState={typeState} />
+                <DiscountInput
+                  type={typeState[0]}
+                  value={discountValue}
+                  onChange={setDV}
+                />
                 <div className="flex flex-row justify-between w-full gap-x-3">
                   <div className="flex flex-col gap-y-1">
                     <Label htmlFor="radio_2_descriptions" weight="plus">
@@ -243,15 +233,6 @@ const CustomPrices = ({ notify, priceList }) => {
             <div>
               Selected products: {productsSelected?.length}/{products?.length}
             </div>
-            <Button
-              variant="primary"
-              size="large"
-              className="w-40"
-              disabled={productsSelected?.length === 0 || discountValue === 0}
-              onClick={applyPricing}
-            >
-              Apply pricing
-            </Button>
             {/* <ProductTable
               products={productsSelected}
               type={type}
