@@ -1,6 +1,6 @@
 {
   "name": "medusa-plugin-custom-pricelist",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A starter for Medusa projects.",
   "author": "Sebastian Rindom <skrindom@gmail.com>",
   "license": "MIT",
@@ -22,9 +22,8 @@
     "prepare": "cross-env NODE_ENV=production npm run build:server && medusa-admin bundle"
   },
   "dependencies": {
+    "@medusajs/medusa": "1.16.1",
     "@medusajs/admin": "^7.0.1",
-    "@medusajs/cache-inmemory": "^1.8.8",
-    "@medusajs/event-bus-local": "^1.9.6",
     "@medusajs/icons": "^1.0.0",
     "@medusajs/ui": "^1.0.0",
     "@tanstack/react-query": "4.22.0",
@@ -42,6 +41,7 @@
     "react-select": "^5.7.4"
   },
   "devDependencies": {
+    "@medusajs/admin": "^7.0.1",
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
     "@babel/preset-typescript": "^7.21.4",

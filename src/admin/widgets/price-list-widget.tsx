@@ -18,8 +18,8 @@ import {
 } from "medusa-react";
 import { useMemo, useState } from "react";
 import ReactSelect from "react-select";
-import DiscountType from "./components/DiscountType";
-import DiscountInput from "./components/DiscountInput";
+import DiscountType from "../components/DiscountType";
+import DiscountInput from "../components/DiscountInput";
 
 const DISCOUNT_TYPES = {
   FIXED: "FIXED",
