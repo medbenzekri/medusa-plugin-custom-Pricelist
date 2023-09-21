@@ -1,15 +1,17 @@
 {
   "name": "medusa-plugin-custom-pricelist",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A starter for Medusa projects.",
   "author": "Sebastian Rindom <skrindom@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/medbenzekri/medusa-plugin-custom-Pricelist"
+  },
   "keywords": [
-    "sqlite",
-    "postgres",
-    "typescript",
-    "ecommerce",
-    "headless",
+    "medusa-plugin",
+    "medusa-plugin-admin",
+    "medusa-plugin-other",
     "medusa"
   ],
   "scripts": {
