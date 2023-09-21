@@ -1,6 +1,6 @@
 {
   "name": "medusa-plugin-custom-pricelist",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A starter for Medusa projects.",
   "author": "Sebastian Rindom <skrindom@gmail.com>",
   "license": "MIT",
