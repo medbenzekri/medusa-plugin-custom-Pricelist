@@ -1,13 +1,5 @@
 import type { WidgetConfig } from "@medusajs/admin";
-import {
-  Button,
-  Container,
-  FocusModal,
-  Heading,
-  Input,
-  Label,
-  RadioGroup,
-} from "@medusajs/ui";
+import { Button, Container, FocusModal, Heading, Label } from "@medusajs/ui";
 import {
   useAdminCollections,
   useAdminProductCategories,
@@ -18,8 +10,8 @@ import {
 } from "medusa-react";
 import { useMemo, useState } from "react";
 import ReactSelect from "react-select";
-import DiscountType from "../components/DiscountType";
 import DiscountInput from "../components/DiscountInput";
+import DiscountType from "../components/DiscountType";
 
 const DISCOUNT_TYPES = {
   FIXED: "FIXED",
@@ -70,8 +62,9 @@ const CustomPrices = ({ notify, priceList }) => {
       return (
         tags?.some((t) => tagsValues.includes(t.id)) ||
         categories?.some((c) => catValues.includes(c.id)) ||
-        selectedCollections.includes(collection) ||
-        selectedProductTypes.some((c) => type.id === c.value)
+        (collection &&
+          selectedCollections.some((c) => c.value === collection?.id)) ||
+        (type && selectedProductTypes.some((c) => type.id === c.value))
       );
     });
   }, [
